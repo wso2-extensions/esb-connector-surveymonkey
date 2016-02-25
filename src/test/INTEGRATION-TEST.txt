@@ -44,10 +44,3 @@ STEPS:
 
  4. Navigate to "{SURVEYMONKEY_HOME}/" and run the following command.
       $ mvn clean install
-
- 	Credential of test account:
-
-    Username : virtusax
-    Password : Colombo1
-    accessToken=paTBz61kMlD0mPWrsaHR3921EuYbHlBvqU0GDZQ.5nahBvB1GbdZpbh2WnOzXY4SpgPezvIfjiLKg1h6dpRI5VJpOBjV3RTscaxNGlgM2w8=
-	apiKey=v9wjtvutfpvz5x82t5dqtt8v
