@@ -30,18 +30,17 @@ STEPS:
 
  3. Update the surveymonkey properties file at location "{SURVEYMONKEY_HOME}/src/test/resources/artifacts/ESB/connector/config/surveymonkey.properties" .
 
-    i)    apiUrl		    - Use the URL of the Survey Monkey API (Default value is 'https://api.surveymonkey.net').
-    ii)   accessToken 		- Use the access token generated in step 2 - iv.
-    iii)  apiKey 		    - API Key of your registered application, which is stored in step 2.
-    iv)	  title 		    - Use a valid string value for the title of the survey.
-	v)    fromSurveyId  	- Use the survey ID created in step 2 - iii.
-	vi)   startDate 	  	- Use a date with YYYY-MM-DD hh:mm:ss format which is at least one day before the current date.
-	vii)  endDate 		    - Use a date with YYYY-MM-DD hh:mm:ss format which is at lead one day after the current date.
-	viii) surveyId 		    - Use the survey ID created in step 2 - i.
-	ix)   collectorId	  	- Use the collector ID created in step 2 - i.
-	x)    respondentId1 	- Use one of the respondent ID retrieved in step 2 - ii.
-	xi)   respondentId2	    - Use one of the respondent ID retrieved in step 2 - ii except the one used for 'respondentId1'.
-	xii)  timeOut		    - Time out for waiting since SurveyMonkey API doesn't support multiple call sequentially (Recommended value is 5000).
+     i)  apiUrl		    - Use the URL of the Survey Monkey API (Default value is 'https://api.surveymonkey.net').
+    ii) accessToken 	    - Use the access token generated in step 2 - iv.
+   iii)apiKey 		    - API Key of your registered application, which is stored in step 2.
+    iv)	title 		    - Use a valid string value for the title of the survey.
+     v) fromSurveyId  	    - Use the survey ID created in step 2 - iii.
+    vi) startDate 	    - Use a date with YYYY-MM-DD hh:mm:ss format which is at least one day before the current date.
+   vii) endDate             - Use a date with YYYY-MM-DD hh:mm:ss format which is at lead one day after the current date. 	  viii) surveyId            - Use the survey ID created in step 2 - i.
+    ix) collectorId	    - Use the collector ID created in step 2 - i.
+     x) respondentId1 	    - Use one of the respondent ID retrieved in step 2 - ii.
+    xi)   respondentId2	    - Use one of the respondent ID retrieved in step 2 - ii except the one used for 'respondentId1'.
+   xii)  timeOut            - Time out for waiting since SurveyMonkey API doesn't support multiple call sequentially (Recommended value is 5000).
 
  4. Navigate to "{SURVEYMONKEY_HOME}/" and run the following command.
       $ mvn clean install
