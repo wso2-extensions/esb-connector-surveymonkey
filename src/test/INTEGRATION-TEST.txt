@@ -9,8 +9,8 @@ Pre-requisites:
 Tested Platform: 
 
  - Microsoft WINDOWS V-7
- - UBUNTU 13.04
- - WSO2 ESB 4.9.0
+ - UBUNTU 13.04, Mac OSx 10.9
+ - WSO2 ESB 4.9.0, WSO2 ESB 5.0.0-BETA
 
 Note:
   This test suite can execute based on two scenarios.
@@ -19,7 +19,7 @@ Note:
 
 STEPS:
 
- 1. Copy the wso2esb-4.9.0.zip in to location "{SURVEYMONKEY_HOME}/repository/".
+ 1. Copy the wso2esb-5.0.0-BETA.zip in to location "{SURVEYMONKEY_HOME}/repository/". Extract the ESB and put "-XX:-UseSplitVerifier" under $JVM_MEM_OPTS into {ESB_HOME}/bin/wso2server.sh.
 
  2. Create a Survey Monkey developer account using the URL "https://developer.surveymonkey.com/" and store the API key you get after successfully registering the application. Then follow the following steps to generate the prerequisites.
 
@@ -27,20 +27,22 @@ STEPS:
  	  ii)	Retrieve two respondent IDs for the above created survey after the recipients responded to the survey.
  	  iii)  Create another survey with at least one question and retrieve the survey ID.
  	  iv)   Go to the Survey Monkey API console (https://developer.surveymonkey.com/api_console), get access token by clicking on "Get Access Token" button and then providing the valid credentials and clicking on the "Authorize" button.
+ 	        or else create an application at https://developer.surveymonkey.com/apps/ and get the 'API Key' and 'Access Token' under 'Settings' (Set all scopes. To set 'Create/Modify Responses' and 'Create/Modify Surveys' scopes, your app must be approved by Survey Monkey).
 
  3. Update the surveymonkey properties file at location "{SURVEYMONKEY_HOME}/src/test/resources/artifacts/ESB/connector/config/surveymonkey.properties" .
 
-     i)  apiUrl		    - Use the URL of the Survey Monkey API (Default value is 'https://api.surveymonkey.net').
-    ii) accessToken 	    - Use the access token generated in step 2 - iv.
-   iii)apiKey 		    - API Key of your registered application, which is stored in step 2.
-    iv)	title 		    - Use a valid string value for the title of the survey.
-     v) fromSurveyId  	    - Use the survey ID created in step 2 - iii.
-    vi) startDate 	    - Use a date with YYYY-MM-DD hh:mm:ss format which is at least one day before the current date.
-   vii) endDate             - Use a date with YYYY-MM-DD hh:mm:ss format which is at lead one day after the current date. 	  viii) surveyId            - Use the survey ID created in step 2 - i.
-    ix) collectorId	    - Use the collector ID created in step 2 - i.
-     x) respondentId1 	    - Use one of the respondent ID retrieved in step 2 - ii.
-    xi)   respondentId2	    - Use one of the respondent ID retrieved in step 2 - ii except the one used for 'respondentId1'.
-   xii)  timeOut            - Time out for waiting since SurveyMonkey API doesn't support multiple call sequentially (Recommended value is 5000).
+     i)  apiUrl        - Use the URL of the Survey Monkey API (Default value is 'https://api.surveymonkey.net').
+    ii)  accessToken   - Use the access token generated in step 2 - iv.
+   iii)  apiKey        - API Key of your registered application, which is stored in step 2.
+    iv)  title         - Use a valid string value for the title of the survey.
+     v)  fromSurveyId  - Use the survey ID created in step 2 - iii.
+    vi)  startDate     - Use a date with YYYY-MM-DD hh:mm:ss format which is at least one day before the current date.
+   vii)  endDate       - Use a date with YYYY-MM-DD hh:mm:ss format which is at lead one day after the current date.
+   viii) surveyId      - Use the survey ID created in step 2 - i.
+    ix)  collectorId   - Use the collector ID created in step 2 - i.
+     x)  respondentId1 - Use one of the respondent ID retrieved in step 2 - ii.
+    xi)  respondentId2 - Use one of the respondent ID retrieved in step 2 - ii except the one used for 'respondentId1'.
+   xii)  timeOut       - Time out for waiting since SurveyMonkey API doesn't support multiple call sequentially (Recommended value is 5000).
 
  4. Navigate to "{SURVEYMONKEY_HOME}/" and run the following command.
       $ mvn clean install
