@@ -54,11 +54,48 @@
         <property name="uri.var.isOrderAscending" expression="$func:isOrderAscending"/>
         <property name="uri.var.orderBy" expression="$func:orderBy"/>
         <property name="uri.var.fields" expression="$func:fields"/>
+        <filter source="boolean($ctx:uri.var.isOrderAscending)" regex="false">
+            <then>
+                <property name="uri.var.isOrderAscending" value="false"/>
+            </then>
+        </filter>
+        <filter source="boolean($ctx:uri.var.pageSize)" regex="false">
+            <then>
+                <property name="uri.var.pageSize" value="0"/>
+            </then>
+        </filter>
+        <filter source="boolean($ctx:uri.var.pageNumber)" regex="false">
+            <then>
+                <property name="uri.var.pageNumber" value="0"/>
+            </then>
+        </filter>
+        <filter source="boolean($ctx:uri.var.fields)" regex="false">
+            <then>
+                <property name="uri.var.fields" value="[]"/>
+            </then>
+        </filter>
+        <payloadFactory media-type="json">
+            <format>
+                {
+                    "survey_id": "$1",
+                    "order_asc":$2,
+                    "page": $3,
+                    "page_size":$4,
+                    "fields":$5
+                }
+            </format>
+            <args>
+                <arg expression="$ctx:uri.var.surveyId"/>
+                <arg expression="$ctx:uri.var.isOrderAscending"/>
+                <arg expression="$ctx:uri.var.pageNumber"/>
+                <arg expression="$ctx:uri.var.pageSize"/>
+                <arg expression="$ctx:uri.var.fields"/>
+            </args>
+        </payloadFactory>
         <!-- Check existance of optional parameters -->
         <script language="js">
             <![CDATA[
 
-            var surveyId = mc.getProperty('uri.var.surveyId');
             var collectorId = mc.getProperty('uri.var.collectorId');
             var pageNumber = mc.getProperty('uri.var.pageNumber');
             var pageSize = mc.getProperty('uri.var.pageSize');
@@ -69,63 +106,48 @@
             var isOrderAscending = mc.getProperty('uri.var.isOrderAscending');
             var orderBy = mc.getProperty('uri.var.orderBy');
             var fields = mc.getProperty('uri.var.fields');
+            var payload = mc.getPayloadJSON();
 
-            var jsonPayloadString = '"survey_id":"' + surveyId +'"';
+            if (pageNumber == "0" || pageNumber == "1") {
+                delete payload['page'];
+            }
+
+            if (pageSize == "0") {
+                delete payload['page_size'];
+            }
+
+            if (fields == "[]") {
+                delete payload['fields'];
+            }
 
             if (collectorId != null && collectorId != "") {
-                jsonPayloadString += ',"collector_id":"' + collectorId + '"';
-            }
-
-            if (pageNumber != null && pageNumber != "") {
-                jsonPayloadString += ',"page":' + pageNumber;
-            }
-
-            if (pageSize != null && pageSize != "") {
-                jsonPayloadString += ',"page_size":' + pageSize;
+                payload.collector_id = collectorId;
             }
 
             if (startDate != null && startDate != "") {
-                jsonPayloadString += ',"start_date":"' + startDate + '"';
+                payload.start_date = startDate;
             }
 
             if (endDate != null && endDate != "") {
-                jsonPayloadString += ',"end_date":"' + endDate + '"';
+                payload.end_date = endDate;
             }
 
             if (startModifiedDate != null && startModifiedDate != "") {
-                jsonPayloadString += ',"start_modified_date":"' + startModifiedDate + '"';
+                payload.start_modified_date = startModifiedDate;
             }
 
             if (endModifiedDate != null && endModifiedDate != "") {
-                jsonPayloadString += ',"end_modified_date":"' + endModifiedDate + '"';
-            }
-
-            if (isOrderAscending != null && isOrderAscending != "") {
-                jsonPayloadString += ',"order_asc":' + isOrderAscending;
+                payload.end_modified_date = endModifiedDate;
             }
 
             if (orderBy != null && orderBy != "") {
-                jsonPayloadString += ',"order_by":"' + orderBy + '"';
+                payload.order_by = orderBy;
             }
 
-            if (fields != null && fields != "") {
-                jsonPayloadString += ',"fields":' + fields;
-            }
-
-            mc.setProperty('uri.var.jsonPayloadString', jsonPayloadString);
+            mc.setPayloadJSON(payload);
 
             ]]>
         </script>
-        <payloadFactory media-type="json">
-            <format>
-                {
-                $1
-                }
-            </format>
-            <args>
-                <arg expression="get-property('uri.var.jsonPayloadString')"/>
-            </args>
-        </payloadFactory>
         <call>
             <endpoint>
                 <http method="post"

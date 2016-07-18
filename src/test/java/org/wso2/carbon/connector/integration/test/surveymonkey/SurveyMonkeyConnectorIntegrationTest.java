@@ -517,5 +517,4 @@ public class SurveyMonkeyConnectorIntegrationTest extends ConnectorIntegrationTe
         Assert.assertEquals(esbRestResponse.getBody().get("status"), apiRestResponse.getBody().get("status"));
         Assert.assertEquals(esbRestResponse.getBody().get("errmsg"), apiRestResponse.getBody().get("errmsg"));
     }
-
 }

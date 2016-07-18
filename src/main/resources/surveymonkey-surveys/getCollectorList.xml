@@ -39,57 +39,82 @@
         <property name="uri.var.name" expression="$func:name"/>
         <property name="uri.var.isOrderAscending" expression="$func:isOrderAscending"/>
         <property name="uri.var.fields" expression="$func:fields"/>
-        <script language="js"><![CDATA[
-               var surveyId = mc.getProperty("uri.var.surveyId");
-               var pageNumber = mc.getProperty("uri.var.pageNumber");
-               var pageSize = mc.getProperty("uri.var.pageSize");
-               var startDate = mc.getProperty("uri.var.startDate");
-               var endDate = mc.getProperty("uri.var.endDate");
-               var name = mc.getProperty("uri.var.name");
-               var isOrderAscending = mc.getProperty("uri.var.isOrderAscending");
-               var fields = mc.getProperty("uri.var.fields");
-               var jsonPayloadString = '"survey_id":"'+surveyId+'"';
-
-            if (pageNumber != null && pageNumber != "") {
-                jsonPayloadString += ',"page":' + pageNumber;
-            }
-
-            if (pageSize != null && pageSize != "") {
-                jsonPayloadString += ',"page_size":' + pageSize;
-            }
-
-            if (startDate != null && startDate != "") {
-                jsonPayloadString += ',"start_date":"' + startDate + '"';
-            }
-
-            if (endDate != null && endDate != "") {
-                jsonPayloadString += ',"end_date":"' + endDate + '"';
-            }
-
-            if (name != null && name != "") {
-                jsonPayloadString += ',"name":"' + name + '"';
-            }
-
-            if (isOrderAscending != null && isOrderAscending != "") {
-                jsonPayloadString += ',"order_asc":' + isOrderAscending;
-            }
-
-            if (fields != null && fields != "") {
-                jsonPayloadString += ',"fields":' + fields;
-            }
-
-            mc.setProperty('uri.var.jsonPayloadString', jsonPayloadString);
-                             ]]></script>
+        <filter xpath="($ctx:uri.var.pageNumber = '' or (not(string($ctx:uri.var.pageNumber))))">
+            <then>
+                <property name="uri.var.pageNumber" value="1"/>
+            </then>
+        </filter>
+        <filter xpath="($ctx:uri.var.pageSize = '' or (not(string($ctx:uri.var.pageSize))))">
+            <then>
+                <property name="uri.var.pageSize" value="1000"/>
+            </then>
+        </filter>
+        <filter xpath="($ctx:uri.var.isOrderAscending = '' or (not(string($ctx:uri.var.isOrderAscending))))">
+            <then>
+                <property name="uri.var.isOrderAscending" value="false"/>
+            </then>
+        </filter>
+        <filter xpath="($ctx:uri.var.fields = '' or (not(string($ctx:uri.var.fields))))">
+            <then>
+                <property name="uri.var.fields" value="[]"/>
+            </then>
+        </filter>
         <payloadFactory media-type="json">
             <format>
                 {
-                $1
+                "survey_id":"$1",
+                "page":$2,
+                "page_size":$3,
+                "start_date":"$4",
+                "end_date":"$5",
+                "order_asc":$6,
+                "fields":$7,
+                "name":"$8"
                 }
             </format>
             <args>
-                <arg expression="get-property('uri.var.jsonPayloadString')"/>
+                <arg expression="$ctx:uri.var.surveyId"/>
+                <arg expression="$ctx:uri.var.pageNumber"/>
+                <arg expression="$ctx:uri.var.pageSize"/>
+                <arg expression="$ctx:uri.var.startDate"/>
+                <arg expression="$ctx:uri.var.endDate"/>
+                <arg expression="$ctx:uri.var.isOrderAscending"/>
+                <arg expression="$ctx:uri.var.fields"/>
+                <arg expression="$ctx:uri.var.name"/>
             </args>
         </payloadFactory>
+        <script language="js"><![CDATA[
+            var startDate = mc.getProperty("uri.var.startDate");
+            var endDate = mc.getProperty("uri.var.endDate");
+            var name = mc.getProperty("uri.var.name");
+            var fields = mc.getProperty("uri.var.fields");
+            var payload = mc.getPayloadJSON();
+            var pNum = payload.page;
+            var payloadFields = payload.fields;
+
+            if (pNum == "1.0") {
+                delete payload['page'];
+            }
+
+            if (payloadFields == "[]") {
+                delete payload['fields'];
+            }
+
+            if (startDate == null || startDate == "") {
+                delete payload['start_date'];
+            }
+
+            if (endDate == null || endDate == "") {
+                delete payload['end_date'];
+            }
+
+            if (name == null || name == "") {
+                delete payload['name'];
+            }
+
+            mc.setPayloadJSON(payload);
+            ]]>
+        </script>
         <call>
             <endpoint>
                 <http method="post"
